@@ -1,0 +1,26 @@
+# depslib dependency file v1.0
+1498250856 source:c:\users\lucas alegre\desktop\emotiondetector\hashtable.cpp
+	"HashTable.h"
+	"WordEntry.h"
+
+1498246535 c:\users\lucas alegre\desktop\emotiondetector\hashtable.h
+	<string>
+	<vector>
+	<list>
+	<iostream>
+	"WordEntry.h"
+
+1498243422 c:\users\lucas alegre\desktop\emotiondetector\wordentry.h
+	<string>
+	<vector>
+	<iostream>
+
+1498245956 source:c:\users\lucas alegre\desktop\emotiondetector\wordentry.cpp
+	"WordEntry.h"
+
+1498248362 source:c:\users\lucas alegre\desktop\emotiondetector\main.cpp
+	"HashTable.h"
+	<iostream>
+	<fstream>
+	<cstdlib>
+
