@@ -24,3 +24,40 @@
 	<fstream>
 	<cstdlib>
 
+1499123878 source:c:\users\lucas alegre\desktop\emotiondetector-master\emotiondetector-master\hashtable.cpp
+	"HashTable.h"
+	"WordEntry.h"
+
+1499123878 c:\users\lucas alegre\desktop\emotiondetector-master\emotiondetector-master\hashtable.h
+	<string>
+	<vector>
+	<list>
+	<iostream>
+	"WordEntry.h"
+
+1499124195 c:\users\lucas alegre\desktop\emotiondetector-master\emotiondetector-master\wordentry.h
+	<string>
+	<vector>
+	<list>
+	<iostream>
+
+1499124974 source:c:\users\lucas alegre\desktop\emotiondetector-master\emotiondetector-master\main.cpp
+	"EmotionDetector.h"
+	<iostream>
+	<fstream>
+	<cstdlib>
+
+1499124477 c:\users\lucas alegre\desktop\emotiondetector-master\emotiondetector-master\emotiondetector.h
+	<vector>
+	"HashTable.h"
+	"WordEntry.h"
+
+1499124214 source:c:\users\lucas alegre\desktop\emotiondetector-master\emotiondetector-master\wordentry.cpp
+	"WordEntry.h"
+
+1499124746 source:c:\users\lucas alegre\desktop\emotiondetector-master\emotiondetector-master\emotiondetector.cpp
+	"EmotionDetector.h"
+	<iostream>
+	<fstream>
+	<cstdlib>
+

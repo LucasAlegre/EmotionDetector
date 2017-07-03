@@ -33,6 +33,8 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="EmotionDetector.cpp" />
+		<Unit filename="EmotionDetector.h" />
 		<Unit filename="HashTable.cpp" />
 		<Unit filename="HashTable.h" />
 		<Unit filename="WordEntry.cpp" />
