@@ -44,20 +44,65 @@ void EmotionDetector::fileReader(string fileName)
             len = line.find(" ");
             if (len > 0)
             {
-                sub = line.substr(0,len);
-                line = line.substr(len+1,line.size());
+                sub = line.substr(0, len);
+                line = line.substr(len + 1,line.size());
             }
             else
             {
                 sub = line.substr(0, line.size());
             }
-            hashTable->put(sub, score, lineId); //insert string with the score
+            WordEntry heapInput(sub, score, lineId);
+            
+            if(hashTable->put(heapInput))
+                heap.push_back(hashTable->getWordEntry(sub));   //insert string with the score
         }
 
         lineId++;
     }
 
 }
+
+
+void EmotionDetector::buildHeapMAX(){
+    for(int i=(heap.size())/2 - 1; i>=0; i--){
+        maxHeapify(i);
+    }
+}
+
+
+void EmotionDetector::buildHeapMIN(){
+    for(int i=(heap.size())/2 - 1; i>=0; i--){
+        minHeapify(i);
+    }
+}
+
+        
+void EmotionDetector::maxHeapify(int i){
+    int e = i*2 + 1;
+    int d = i*2 + 2;
+    int maior = i;
+    int heapSize = heap.size();
+    if(e < heapSize  && heap[e]->getAverage() > heap[maior]->getAverage()) maior = e;
+    if(d < heapSize  && heap[d]->getAverage() > heap[maior]->getAverage()) maior = d;
+    if(maior != i){
+         swap(heap[maior], heap[i]);
+         maxHeapify(maior);
+    }
+}
+
+void EmotionDetector::minHeapify(int i){
+    int e = i*2 + 1;
+    int d = i*2 + 2;
+    int menor = i;
+    int heapSize = heap.size();
+    if(e < heapSize  && heap[e]->getAverage() < heap[menor]->getAverage()) menor = e;
+    if(d < heapSize  && heap[d]->getAverage() < heap[menor]->getAverage()) menor = d;
+    if(menor != i){
+         swap(heap[menor], heap[i]);
+         minHeapify(menor);
+    }
+}
+
 
 void EmotionDetector::calculateReviewEmotion()
 {
@@ -121,13 +166,15 @@ void EmotionDetector::printAppearances(const string word){
 
 void EmotionDetector::printMostPositive(int k)
 {
-
+    buildHeapMIN();
+    cout << "KKK" << heap[0]->getAverage() << endl;
 
 }
 
 void EmotionDetector::printMostNegative(int k)
 {
-
+    buildHeapMAX();
+    cout << "KKK" << heap[0]->getAverage() << endl;
 }
 
 vector<string> EmotionDetector::radicalsSearch(string rad)

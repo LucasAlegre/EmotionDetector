@@ -49,7 +49,7 @@ class HashTable {
         *   If it is a new word, insert in the hashtable,
         *   otherwise add a new appearance to the word
         */
-        void put(string, int, int);
+        bool put(WordEntry entry);
 };
 
 #endif

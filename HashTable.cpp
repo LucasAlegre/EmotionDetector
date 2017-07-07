@@ -17,17 +17,18 @@ int HashTable::computeHash(string s) {
 	return hash % size;
 }
 
-void HashTable::put(string s, int score, int reviewId) {
-	int hash = computeHash(s);
+bool HashTable::put(WordEntry entry) {
+	int hash = computeHash(entry.getWord());
 
     for( list<WordEntry>::iterator it = hashTable->at(hash).begin(); it != hashTable->at(hash).end(); it++ ){
-		if((*it).getWord() == s){
-            (*it).addNewAppearance(score, reviewId);
-			return;
+		if((*it).getWord() == entry.getWord()){
+            (*it).addNewAppearance(entry.getTotalScore(), entry.getReviewIds().front());
+			return false;
 		}
 	}
 
-	hashTable->at(hash).emplace_back(s, score, reviewId);
+	hashTable->at(hash).push_back(entry);
+	return true;
 
 }
 

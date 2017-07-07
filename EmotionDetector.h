@@ -23,6 +23,31 @@ class EmotionDetector{
         */
         void fileReader(string);
 
+        /*
+        *   Builds HeapTreeMAX by rating
+        */
+
+        void buildHeapMAX();
+
+        /*
+        *   Builds HeapTreeMIN rating
+        */
+
+        void buildHeapMIN();
+
+        /*
+        *   Executes HeapsTreeMAX's heapify
+        */
+
+        void maxHeapify(int i);
+
+        /*
+        *Executes HeapsTreeMAX's heapify
+        */
+
+        void minHeapify(int i);
+
+
     public:
 
         /*
