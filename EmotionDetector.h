@@ -16,13 +16,13 @@ class EmotionDetector{
     private:
         HashTable *hashTable;
         vector<string> frases;
+        int maxId;
         vector<WordEntry*> heap;
 
         /*
         *   Read dataBase of reviews and insert in the hashTable
         */
         void fileReader(string);
-
         /*
         *   Builds HeapTreeMAX by rating
         */
@@ -76,6 +76,13 @@ class EmotionDetector{
         void printMostPositive(int k);
         void printMostNegative(int k);
         vector<string> radicalsSearch(string rad);
+
+        /*
+        *Adds file words to memory
+        */
+        void addFile(string fileName);
+
+
 
 };
 
