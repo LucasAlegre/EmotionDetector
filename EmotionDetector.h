@@ -4,6 +4,7 @@
 #include <vector>
 #include "HashTable.h"
 #include "WordEntry.h"
+#include "Trie.h"
 
 using namespace std;
 
@@ -17,7 +18,7 @@ class EmotionDetector{
         HashTable *hashTable; // HashTable with WordEntries
         vector< pair< string, int > > frases; // All senteces read from the file
         vector< WordEntry* > heap; // Heap used to get extremes occurences
-        //TODO: implement Trie Tree
+        Trie* trie;//TODO: implement Trie Tree
 
         int maxId; // Id of the last sentence
 

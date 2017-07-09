@@ -9,6 +9,7 @@ using namespace std;
 
 EmotionDetector::EmotionDetector(string fileName)
 {
+    trie = new Trie();
     maxId = 0;
     hashTable = new HashTable(1000);
     fileReader(fileName);
@@ -52,6 +53,9 @@ void EmotionDetector::fileReader(string fileName)
             {
                 sub = line.substr(0, line.size());
             }
+
+            trie->addWord(sub);
+
             WordEntry heapInput(sub, score, lineId);
 
             if(hashTable->put(heapInput))
@@ -512,6 +516,8 @@ void EmotionDetector::printLessAppearances(int k){
 
 void EmotionDetector::radicalsSearch(string rad){
 
+    trie->findRadOccurances(rad);
+
 }
 
 void EmotionDetector::addFile(string fileName){
@@ -548,6 +554,9 @@ void EmotionDetector::addFile(string fileName){
                 {
                     sub = line.substr(0, line.size());
                 }
+
+                trie->addWord(sub);
+
                 WordEntry heapInput(sub, score, maxId);
 
                 if(hashTable->put(heapInput))

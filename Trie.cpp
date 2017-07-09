@@ -1,7 +1,7 @@
 #include "Node.h"
 #include "Trie.h"
 
-
+using namespace std;
 
 Trie::Trie()
 {
@@ -65,30 +65,40 @@ bool Trie::searchWord(string s)
 
     return false;
 }
+void Trie::printAllPossibleChildren(Node* node, string s){
+            
+            string aux = s + node->content();
+            if ( node->children().size()==0 ){
+                cout << aux << endl;
+                return;
+            }else{
+                for(int i = 0; i<node->children().size(); i++){
+                    printAllPossibleChildren(node->children().at(i), aux);
+                }
+            }
+}
 
 void Trie::findRadOccurances(string rad){
 
 
     Node* current = root;
-    bool hasEnded = false;
-
-    while ( !hasEnded ){
 
         for ( int i = 0; i < rad.length(); i++ )
         {
-            Node* tmp = current->findChild(s[i]);
-            if ( tmp == NULL )
-                cout << "No word has been found with that Rad"
+            Node* tmp = current->findChild(rad[i]);
+            if ( tmp == NULL ){
+                cout << "No word has been found with that Rad" << endl;
+                return;
+            }
             current = tmp;
         }
+    
 
-        if ( current->wordMarker() )
-            return true;
-        else
-            return false;
-    }
+        for(Node* no : current->children()){
+                printAllPossibleChildren(no, rad);
+                }
 
-    return false;
+    return;
 
 }
 

@@ -1,4 +1,3 @@
-
 #ifndef TRIE_H
 #define TRIE_H
 
@@ -6,7 +5,7 @@
 #include <vector>
 #include <list>
 #include <iostream>
-#include "Trie.h"
+#include "Node.h"
 
 using namespace std;
 
@@ -20,6 +19,7 @@ public:
     void deleteWord(string s);
     void findRadOccurances(string rad);
 private:
+    void printAllPossibleChildren(Node* node, string s);
     Node* root;
 };
 
