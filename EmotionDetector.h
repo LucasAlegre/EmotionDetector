@@ -15,8 +15,8 @@ class EmotionDetector{
 
     private:
         HashTable *hashTable;
-        vector<string> frases;
-        vector<WordEntry*> heap;
+        vector< pair< string, int > > frases;
+        vector< WordEntry* > heap;
 
         /*
         *   Read dataBase of reviews and insert in the hashTable
@@ -77,6 +77,7 @@ class EmotionDetector{
         void printMostNegative(int k);
         vector<string> radicalsSearch(string rad);
 
+        void printHashTable();
 };
 
 

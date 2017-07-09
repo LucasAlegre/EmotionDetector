@@ -67,3 +67,12 @@ bool HashTable::contains(const string s) {
 	 }
      return false;
 }
+
+void HashTable::print(){
+    int s = 0;
+    for(int i = 0; i < hashTable->size(); i++){
+        cout << hashTable->at(i).size() << endl;
+        s += hashTable->at(i).size();
+    }
+    cout << s;
+}

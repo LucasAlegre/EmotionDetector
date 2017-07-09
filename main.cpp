@@ -16,12 +16,14 @@ int main()
 {
     EmotionDetector emotionDetector("movieReviews.txt");
 
-    //emotionDetector.calculateReviewEmotion();
+   // emotionDetector.calculateReviewEmotion();
 
     emotionDetector.printMostPositive(3);
     emotionDetector.printMostNegative(3);
 
-    emotionDetector.printAppearances("love");
+    emotionDetector.printAppearances("yeah");
+
+    emotionDetector.printHashTable();
 
     return 0;
 }

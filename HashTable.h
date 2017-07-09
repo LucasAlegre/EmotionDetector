@@ -50,6 +50,8 @@ class HashTable {
         *   otherwise add a new appearance to the word
         */
         bool put(WordEntry entry);
+
+        void print();
 };
 
 #endif
