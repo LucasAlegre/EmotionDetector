@@ -22,7 +22,6 @@ class EmotionDetector{
         *   Read dataBase of reviews and insert in the hashTable
         */
         void fileReader(string);
-
         /*
         *   Builds HeapTreeMAX by rating
         */
@@ -78,6 +77,13 @@ class EmotionDetector{
         vector<string> radicalsSearch(string rad);
 
         void printHashTable();
+        /*
+        *Adds file words to memory
+        */
+        void addFile(string fileName);
+
+
+
 };
 
 
