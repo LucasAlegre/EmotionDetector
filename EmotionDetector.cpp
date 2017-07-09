@@ -165,9 +165,8 @@ void EmotionDetector::printAppearances(const string word){
 
 void EmotionDetector::printMostPositive(int k){
     buildHeapMAX();
-    
-    if(k > heap.size())
-     k = heap.size();
+    cout<<"MOST POSITIVE:" <<endl;
+    if(k > heap.size()) k = heap.size();
 
     vector<int> trees;
     trees.push_back(1);
@@ -182,17 +181,18 @@ void EmotionDetector::printMostPositive(int k){
     int removal = 0;
         buffer = trees.at(0);
         for(int i = 0; i < trees.size(); i++){      //percorre a lista de indexes para ver qua que é a maior para retirar e colocar os filhos
-            
             if(heap[trees[i]]->getAverage() > heap[buffer]->getAverage()){
                 buffer = trees[i];
                 removal = i;
             }
         }
-    
         trees.erase(trees.begin() + removal);       //retira a maior delas e coloca os filhos para comparar com os que sobraram
-        trees.push_back(2*buffer + 1);              /// TODO: ISSO AQUI TA DANDO ERRADO PQ ELE SAI DO HEAP, MAS SE BOTAR UM INRANGE ELE PULA FILHOS QUE EXISTEM (?) 
-        trees.push_back(2*buffer + 2);
-         
+        
+        if(heap.size() > 2*buffer+1) trees.push_back(2*buffer + 1);              /// TODO: ISSO AQUI TA DANDO ERRADO PQ ELE SAI DO HEAP, MAS SE BOTAR UM INRANGE ELE PULA FILHOS QUE EXISTEM (?) 
+        
+        if(heap.size() > 2*buffer+2)trees.push_back(2*buffer + 2);
+        
+
          cout << ++counter << " : " << heap[buffer]->getWord() << " -> " << heap[buffer]->getAverage() << endl; 
         
     }
@@ -202,7 +202,39 @@ void EmotionDetector::printMostPositive(int k){
 
 void EmotionDetector::printMostNegative(int k){
     buildHeapMIN();
-    cout << "KKK" << heap[0]->getAverage() << endl;
+    cout<<"MOST NEGATIVE:" <<endl;
+    if(k > heap.size()) k = heap.size();
+
+    vector<int> trees;
+    trees.push_back(1);
+    trees.push_back(2);
+    int buffer;
+    int counter = 1;
+
+    cout << "1 : " << heap[0]->getWord() << " -> " << heap[0]->getAverage() << endl; 
+
+    while(counter!=k){              // Enquanto n tiver o num certo de palavras, fazer o loop de achara a prox
+
+    int removal = 0;
+        buffer = trees.at(0);
+        for(int i = 0; i < trees.size(); i++){      //percorre a lista de indexes para ver qua que é a maior para retirar e colocar os filhos
+            if(heap[trees[i]]->getAverage() < heap[buffer]->getAverage()){
+                buffer = trees[i];
+                removal = i;
+            }
+        }
+        trees.erase(trees.begin() + removal);       //retira a maior delas e coloca os filhos para comparar com os que sobraram
+        
+        if(heap.size() > 2*buffer+1) trees.push_back(2*buffer + 1);              /// TODO: ISSO AQUI TA DANDO ERRADO PQ ELE SAI DO HEAP, MAS SE BOTAR UM INRANGE ELE PULA FILHOS QUE EXISTEM (?) 
+        
+        if(heap.size() > 2*buffer+2)trees.push_back(2*buffer + 2);
+        
+
+         cout << ++counter << " : " << heap[buffer]->getWord() << " -> " << heap[buffer]->getAverage() << endl; 
+        
+    }
+
+
 }
 
 vector<string> EmotionDetector::radicalsSearch(string rad){   
