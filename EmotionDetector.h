@@ -14,43 +14,68 @@ using namespace std;
 class EmotionDetector{
 
     private:
-        HashTable *hashTable;
-        vector< pair< string, int > > frases;
-        vector< WordEntry* > heap;
+        HashTable *hashTable; // HashTable with WordEntries
+        vector< pair< string, int > > frases; // All senteces read from the file
+        vector< WordEntry* > heap; // Heap used to get extremes occurences
+        //TODO: implement Trie Tree
+
+        int maxId; // Id of the last sentence
 
         /*
         *   Read dataBase of reviews and insert in the hashTable
         */
         void fileReader(string);
+
         /*
         *   Builds HeapTreeMAX by rating
         */
-
-        void buildHeapMAX();
+        void buildHeapMAXbyRating();
 
         /*
         *   Builds HeapTreeMIN rating
         */
 
-        void buildHeapMIN();
+        void buildHeapMINbyRating();
 
         /*
         *   Executes HeapsTreeMAX's heapify
         */
 
-        void maxHeapify(int i);
+        void maxHeapifyByRating(int i);
 
         /*
-        *Executes HeapsTreeMAX's heapify
+        * Executes HeapsTreeMAX's heapify
+        */
+        void minHeapifyByRating(int i);
+
+                /*
+        *   Builds HeapTreeMAX by rating
+        */
+        void buildHeapMAXbyAppearances();
+
+        /*
+        *   Builds HeapTreeMIN rating
         */
 
-        void minHeapify(int i);
+        void buildHeapMINbyAppearances();
+
+        /*
+        *   Executes HeapsTreeMAX's heapify
+        */
+
+        void maxHeapifyByAppearances(int i);
+
+        /*
+        * Executes HeapsTreeMAX's heapify
+        */
+        void minHeapifyByAppearances(int i);
 
 
     public:
 
         /*
         *   Constructor
+        *   @param string The file with the reviews
         */
         EmotionDetector(string);
 
@@ -72,17 +97,47 @@ class EmotionDetector{
         */
         void printAppearances(const string word);
 
-        void printMostPositive(int k);
-        void printMostNegative(int k);
-        vector<string> radicalsSearch(string rad);
-
-        void printHashTable();
         /*
-        *Adds file words to memory
+        *   Generate a .cvs file with all reviews of the word given
+        *   with rating in the interval [min, max]
+        *   @param word Word that will be searched
+        *   @param min Lowest rating of the interval
+        *   @param max Biggest rating of the interval
+        */
+        void generateCVS(const string word, double min, double max);
+
+        /*
+        *  Prints the K most positive words
+        */
+        void printMostPositive(int k);
+
+        /*
+        *  Prints the K most negative words
+        */
+        void printMostNegative(int k);
+
+        /*
+        *  Prints the K words with more appearances
+        */
+        void printMostAppearances(int k);
+
+        /*
+        *  Prints the K words with less appearances
+        */
+        void printLessAppearances(int k);
+
+        /*
+        *   Prints all the words with the radical given
+        *   @param rad Radical
+        */
+        void radicalsSearch(string rad);
+
+        /*
+        *  Adds file words to memory
         */
         void addFile(string fileName);
 
-
+        void printHashTable();
 
 };
 

@@ -19,7 +19,7 @@
 1499124214 source:c:\users\lucas alegre\desktop\emotiondetector\wordentry.cpp
 	"WordEntry.h"
 
-1499566683 source:c:\users\lucas alegre\desktop\emotiondetector\main.cpp
+1499574243 source:c:\users\lucas alegre\desktop\emotiondetector\main.cpp
 	"EmotionDetector.h"
 	<iostream>
 	<fstream>
@@ -62,12 +62,12 @@
 	<fstream>
 	<cstdlib>
 
-1499566683 c:\users\lucas alegre\desktop\emotiondetector\emotiondetector.h
+1499570357 c:\users\lucas alegre\desktop\emotiondetector\emotiondetector.h
 	<vector>
 	"HashTable.h"
 	"WordEntry.h"
 
-1499566827 source:c:\users\lucas alegre\desktop\emotiondetector\emotiondetector.cpp
+1499572794 source:c:\users\lucas alegre\desktop\emotiondetector\emotiondetector.cpp
 	"EmotionDetector.h"
 	<iostream>
 	<fstream>

@@ -64,21 +64,31 @@ void EmotionDetector::fileReader(string fileName)
 }
 
 
-void EmotionDetector::buildHeapMAX(){
-    for(int i=(heap.size())/2 - 1; i>=0; i--){
-        maxHeapify(i);
+void EmotionDetector::buildHeapMAXbyRating(){
+    for(int i=(heap.size())/2 - 1; i >= 0; i--){
+        maxHeapifyByRating(i);
     }
 }
 
-
-void EmotionDetector::buildHeapMIN(){
-    for(int i=(heap.size())/2 - 1; i>=0; i--){
-        minHeapify(i);
+void EmotionDetector::buildHeapMAXbyAppearances(){
+    for(int i = (heap.size())/2 - 1; i >= 0; i--){
+        maxHeapifyByAppearances(i);
     }
 }
 
+void EmotionDetector::buildHeapMINbyRating(){
+    for(int i=(heap.size())/2 - 1; i >= 0; i--){
+        minHeapifyByRating(i);
+    }
+}
 
-void EmotionDetector::maxHeapify(int i){
+void EmotionDetector::buildHeapMINbyAppearances(){
+    for(int i=(heap.size())/2 - 1; i >= 0; i--){
+        minHeapifyByAppearances(i);
+    }
+}
+
+void EmotionDetector::maxHeapifyByRating(int i){
 
     int e = i*2 + 1;
     int d = i*2 + 2;
@@ -92,11 +102,29 @@ void EmotionDetector::maxHeapify(int i){
 
     if(maior != i){
          swap(heap[maior], heap[i]);
-         maxHeapify(maior);
+         maxHeapifyByRating(maior);
     }
 }
 
-void EmotionDetector::minHeapify(int i){
+void EmotionDetector::maxHeapifyByAppearances(int i){
+
+    int e = i*2 + 1;
+    int d = i*2 + 2;
+    int maior = i;
+    int heapSize = heap.size();
+
+    if(e < heapSize  && heap[e]->getNumAppearances() > heap[maior]->getNumAppearances())
+        maior = e;
+    if(d < heapSize  && heap[d]->getNumAppearances() > heap[maior]->getNumAppearances())
+        maior = d;
+
+    if(maior != i){
+         swap(heap[maior], heap[i]);
+         maxHeapifyByAppearances(maior);
+    }
+}
+
+void EmotionDetector::minHeapifyByRating(int i){
 
     int e = i*2 + 1;
     int d = i*2 + 2;
@@ -110,7 +138,25 @@ void EmotionDetector::minHeapify(int i){
 
     if(menor != i){
          swap(heap[menor], heap[i]);
-         minHeapify(menor);
+         minHeapifyByRating(menor);
+    }
+}
+
+void EmotionDetector::minHeapifyByAppearances(int i){
+
+    int e = i*2 + 1;
+    int d = i*2 + 2;
+    int menor = i;
+    int heapSize = heap.size();
+
+    if(e < heapSize  && heap[e]->getNumAppearances() < heap[menor]->getNumAppearances())
+        menor = e;
+    if(d < heapSize  && heap[d]->getNumAppearances() < heap[menor]->getNumAppearances())
+        menor = d;
+
+    if(menor != i){
+         swap(heap[menor], heap[i]);
+         minHeapifyByAppearances(menor);
     }
 }
 
@@ -173,82 +219,299 @@ void EmotionDetector::printAppearances(const string word){
     }
 }
 
+void EmotionDetector::generateCVS(const string word, double min, double max){
+
+    WordEntry *w = hashTable->getWordEntry(word);
+    if(w != nullptr){
+        ofstream cvs(word + ".cvs");
+        for(int i : w->getReviewIds()){
+            if(frases[i].second >= min && frases[i].second <= max)
+               cvs << frases[i].second << " " << frases[i].first << endl;
+        }
+        cvs.close();
+    }
+    else{
+        cout << "This word never appears!" << endl;
+    }
+}
+
 void EmotionDetector::printMostPositive(int k){
-    buildHeapMAX();
-    cout<<"MOST POSITIVE:" <<endl;
-    if(k > heap.size()) k = heap.size();
+
+    buildHeapMAXbyRating();
+
+    if(k > heap.size())
+        k = heap.size();
 
     vector<int> trees;
-    trees.push_back(1);
-    trees.push_back(2);
-    int buffer;
-    int counter = 1;
 
-    cout << "1 : " << heap[0]->getWord() << " -> " << heap[0]->getAverage() << endl; 
-
-    while(counter!=k){              // Enquanto n tiver o num certo de palavras, fazer o loop de achara a prox
-
-    int removal = 0;
-        buffer = trees.at(0);
-        for(int i = 0; i < trees.size(); i++){      //percorre a lista de indexes para ver qua que é a maior para retirar e colocar os filhos
-            if(heap[trees[i]]->getAverage() > heap[buffer]->getAverage()){
-                buffer = trees[i];
-                removal = i;
-            }
-        }
-        trees.erase(trees.begin() + removal);       //retira a maior delas e coloca os filhos para comparar com os que sobraram
-        
-        if(heap.size() > 2*buffer+1) trees.push_back(2*buffer + 1);              /// TODO: ISSO AQUI TA DANDO ERRADO PQ ELE SAI DO HEAP, MAS SE BOTAR UM INRANGE ELE PULA FILHOS QUE EXISTEM (?) 
-        
-        if(heap.size() > 2*buffer+2)trees.push_back(2*buffer + 2);
-        
-
-         cout << ++counter << " : " << heap[buffer]->getWord() << " -> " << heap[buffer]->getAverage() << endl; 
-        
+    if(heap[1]->getAverage() > heap[2]->getAverage()){
+        trees.push_back(1);
+        trees.push_back(2);
+    }
+    else{
+        trees.push_back(2);
+        trees.push_back(1);
     }
 
+    int biggest;
+    int counter = 1;
+
+    cout << "1 - " << heap[0]->getWord() << " Rating: " << heap[0]->getAverage() << endl;
+
+    while(counter != k){              // Enquanto n tiver o num certo de palavras, fazer o loop de achara a prox
+
+        biggest = trees.at(0);
+
+        trees.erase(trees.begin());      //retira a maior delas e coloca os filhos para comparar com os que sobraram
+
+        int leftChild = 2 * biggest + 1;
+        int righChild = 2 * biggest + 2;
+
+        if(heap.size() > leftChild){
+            int i = trees.size() - 1;
+            bool inserted = false;
+            while(!inserted && i >= 0){
+                if(heap[leftChild]->getAverage() <= heap[trees[i]]->getAverage()){
+                    trees.insert(trees.begin() + i + 1, leftChild);
+                    inserted = true;
+                }
+                else
+                    i--;
+            }
+            if(!inserted)
+                trees.insert(trees.begin(), leftChild);
+        }
+
+        if(heap.size() > righChild){
+            int i = trees.size() - 1;
+            bool inserted = false;
+            while(!inserted && i >= 0){
+                if(heap[righChild]->getAverage() <= heap[trees[i]]->getAverage()){
+                    trees.insert(trees.begin() + i + 1, righChild);
+                    inserted = true;
+                }
+                else
+                    i--;
+            }
+            if(!inserted)
+                trees.insert(trees.begin(), righChild);
+        }
+
+        cout << ++counter << " - " << heap[biggest]->getWord() << " Rating: " << heap[biggest]->getAverage() << endl;
+
+    }
+
+
+}
+
+void EmotionDetector::printMostAppearances(int k){
+
+    buildHeapMAXbyAppearances();
+
+    if(k > heap.size())
+        k = heap.size();
+
+    vector<int> trees;
+
+    if(heap[1]->getNumAppearances() > heap[2]->getNumAppearances()){
+        trees.push_back(1);
+        trees.push_back(2);
+    }
+    else{
+        trees.push_back(2);
+        trees.push_back(1);
+    }
+
+    int biggest;
+    int counter = 1;
+
+    cout << "1 - " << heap[0]->getWord() << " Appearances: " << heap[0]->getNumAppearances() << endl;
+
+    while(counter != k){              // Enquanto n tiver o num certo de palavras, fazer o loop de achara a prox
+
+        biggest = trees.at(0);
+
+        trees.erase(trees.begin());      //retira a maior delas e coloca os filhos para comparar com os que sobraram
+
+        int leftChild = 2 * biggest + 1;
+        int righChild = 2 * biggest + 2;
+
+        if(heap.size() > leftChild){
+            int i = trees.size() - 1;
+            bool inserted = false;
+            while(!inserted && i >= 0){
+                if(heap[leftChild]->getNumAppearances() <= heap[trees[i]]->getNumAppearances()){
+                    trees.insert(trees.begin() + i + 1, leftChild);
+                    inserted = true;
+                }
+                else
+                    i--;
+            }
+            if(!inserted)
+                trees.insert(trees.begin(), leftChild);
+        }
+
+        if(heap.size() > righChild){
+            int i = trees.size() - 1;
+            bool inserted = false;
+            while(!inserted && i >= 0){
+                if(heap[righChild]->getNumAppearances() <= heap[trees[i]]->getNumAppearances()){
+                    trees.insert(trees.begin() + i + 1, righChild);
+                    inserted = true;
+                }
+                else
+                    i--;
+            }
+            if(!inserted)
+                trees.insert(trees.begin(), righChild);
+        }
+
+        cout << ++counter << " - " << heap[biggest]->getWord() << " Appearances: " << heap[biggest]->getNumAppearances() << endl;
+
+    }
 
 }
 
 void EmotionDetector::printMostNegative(int k){
-    buildHeapMIN();
-    cout<<"MOST NEGATIVE:" <<endl;
-    if(k > heap.size()) k = heap.size();
+
+    buildHeapMINbyRating();
+
+    if(k > heap.size())
+        k = heap.size();
 
     vector<int> trees;
-    trees.push_back(1);
-    trees.push_back(2);
-    int buffer;
+
+    if(heap[1]->getAverage() < heap[2]->getAverage()){
+        trees.push_back(1);
+        trees.push_back(2);
+    }
+    else{
+        trees.push_back(2);
+        trees.push_back(1);
+    }
+
+    int lowest;
     int counter = 1;
 
-    cout << "1 : " << heap[0]->getWord() << " -> " << heap[0]->getAverage() << endl; 
+    cout << "1 - " << heap[0]->getWord() << " Rating: " << heap[0]->getAverage() << endl;
 
-    while(counter!=k){              // Enquanto n tiver o num certo de palavras, fazer o loop de achara a prox
+    while(counter != k){              // Enquanto n tiver o num certo de palavras, fazer o loop de achara a prox
 
-    int removal = 0;
-        buffer = trees.at(0);
-        for(int i = 0; i < trees.size(); i++){      //percorre a lista de indexes para ver qua que é a maior para retirar e colocar os filhos
-            if(heap[trees[i]]->getAverage() < heap[buffer]->getAverage()){
-                buffer = trees[i];
-                removal = i;
+        lowest = trees.at(0);
+
+        trees.erase(trees.begin());      //retira a maior delas e coloca os filhos para comparar com os que sobraram
+
+        int leftChild = 2 * lowest + 1;
+        int righChild = 2 * lowest + 2;
+
+        if(heap.size() > leftChild){
+            int i = trees.size() - 1;
+            bool inserted = false;
+            while(!inserted && i >= 0){
+                if(heap[leftChild]->getAverage() >= heap[trees[i]]->getAverage()){
+                    trees.insert(trees.begin() + i + 1, leftChild);
+                    inserted = true;
+                }
+                else
+                    i--;
             }
+            if(!inserted)
+                trees.insert(trees.begin(), leftChild);
         }
-        trees.erase(trees.begin() + removal);       //retira a maior delas e coloca os filhos para comparar com os que sobraram
-        
-        if(heap.size() > 2*buffer+1) trees.push_back(2*buffer + 1);              /// TODO: ISSO AQUI TA DANDO ERRADO PQ ELE SAI DO HEAP, MAS SE BOTAR UM INRANGE ELE PULA FILHOS QUE EXISTEM (?) 
-        
-        if(heap.size() > 2*buffer+2)trees.push_back(2*buffer + 2);
-        
 
-         cout << ++counter << " : " << heap[buffer]->getWord() << " -> " << heap[buffer]->getAverage() << endl; 
-        
+        if(heap.size() > righChild){
+            int i = trees.size() - 1;
+            bool inserted = false;
+            while(!inserted && i >= 0){
+                if(heap[righChild]->getAverage() >= heap[trees[i]]->getAverage()){
+                    trees.insert(trees.begin() + i + 1, righChild);
+                    inserted = true;
+                }
+                else
+                    i--;
+            }
+            if(!inserted)
+                trees.insert(trees.begin(), righChild);
+        }
+
+        cout << ++counter << " - " << heap[lowest]->getWord() << " Rating: " << heap[lowest]->getAverage() << endl;
+
     }
 
 
 }
 
-vector<string> EmotionDetector::radicalsSearch(string rad){   
-    
+void EmotionDetector::printLessAppearances(int k){
+
+    buildHeapMINbyAppearances();
+
+    if(k > heap.size())
+        k = heap.size();
+
+    vector<int> trees;
+
+    if(heap[1]->getNumAppearances() < heap[2]->getNumAppearances()){
+        trees.push_back(1);
+        trees.push_back(2);
+    }
+    else{
+        trees.push_back(2);
+        trees.push_back(1);
+    }
+
+    int lowest;
+    int counter = 1;
+
+    cout << "1 - " << heap[0]->getWord() << " Appearances: " << heap[0]->getNumAppearances() << endl;
+
+    while(counter != k){              // Enquanto n tiver o num certo de palavras, fazer o loop de achara a prox
+
+        lowest = trees.at(0);
+
+        trees.erase(trees.begin());      //retira a maior delas e coloca os filhos para comparar com os que sobraram
+
+        int leftChild = 2 * lowest + 1;
+        int righChild = 2 * lowest + 2;
+
+        if(heap.size() > leftChild){
+            int i = trees.size() - 1;
+            bool inserted = false;
+            while(!inserted && i >= 0){
+                if(heap[leftChild]->getNumAppearances() >= heap[trees[i]]->getNumAppearances()){
+                    trees.insert(trees.begin() + i + 1, leftChild);
+                    inserted = true;
+                }
+                else
+                    i--;
+            }
+            if(!inserted)
+                trees.insert(trees.begin(), leftChild);
+        }
+
+        if(heap.size() > righChild){
+            int i = trees.size() - 1;
+            bool inserted = false;
+            while(!inserted && i >= 0){
+                if(heap[righChild]->getNumAppearances() >= heap[trees[i]]->getNumAppearances()){
+                    trees.insert(trees.begin() + i + 1, righChild);
+                    inserted = true;
+                }
+                else
+                    i--;
+            }
+            if(!inserted)
+                trees.insert(trees.begin(), righChild);
+        }
+
+        cout << ++counter << " - " << heap[lowest]->getWord() << " Appearances: " << heap[lowest]->getNumAppearances() << endl;
+
+    }
+
+
+}
+
+void EmotionDetector::radicalsSearch(string rad){
+
 }
 
 void EmotionDetector::addFile(string fileName){
@@ -269,7 +532,7 @@ void EmotionDetector::addFile(string fileName){
             myfile.get();    // get blank space
             getline(myfile, line);
 
-            this->frases.push_back(line.substr(0, line.size()));
+            this->frases.push_back( pair< string, int >(line.substr(0, line.size()), score) );
 
             int len = line.size();
             while(len > 0)    //identify all individual strings
