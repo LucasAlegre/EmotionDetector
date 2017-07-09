@@ -198,14 +198,10 @@ void EmotionDetector::minHeapifyByAppearances(int i){
 }
 
 
-void EmotionDetector::calculateReviewEmotion(){
-    string message = " ";
+void EmotionDetector::calculateReviewEmotion(string message){
 
-    while(message.length() > 0)
+    if(message.length() > 0)
     {
-        cout << "Enter a review -- Press return to exit: " <<  endl;
-        getline(cin, message);
-
         //used for calculating the average
         double sum = 0;
         int count = 0;
@@ -232,7 +228,7 @@ void EmotionDetector::calculateReviewEmotion(){
 
         if (message.size() > 0)
         {
-            cout << "The review has an average value of " << (double)sum/count << endl;
+            cout << "The review has an average value of " << (double)sum/count << endl << endl;
         }
     }
 

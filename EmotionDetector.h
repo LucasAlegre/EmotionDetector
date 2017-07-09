@@ -89,7 +89,7 @@ class EmotionDetector{
         /*
         *   Calculate emotion score for new reviews
         */
-        void calculateReviewEmotion();
+        void calculateReviewEmotion(string message);
 
         /*
         *  Get average rating of a word

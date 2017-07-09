@@ -52,7 +52,10 @@ int main()
                 break;
 
             case 2:
-                emotionDetector.calculateReviewEmotion();
+                cout << "Please type the new Review:" << endl;
+                cin.ignore(); // Ignore \n from enter
+                getline(cin, buff);
+                emotionDetector.calculateReviewEmotion(buff);
                 break;
 
             case 3:

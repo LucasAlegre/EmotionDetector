@@ -37,6 +37,10 @@
 		<Unit filename="EmotionDetector.h" />
 		<Unit filename="HashTable.cpp" />
 		<Unit filename="HashTable.h" />
+		<Unit filename="Node.cpp" />
+		<Unit filename="Node.h" />
+		<Unit filename="Trie.cpp" />
+		<Unit filename="Trie.h" />
 		<Unit filename="WordEntry.cpp" />
 		<Unit filename="WordEntry.h" />
 		<Unit filename="main.cpp" />
