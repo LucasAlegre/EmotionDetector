@@ -24,7 +24,7 @@ void Trie::addWord(string s)
     }
 
     for ( int i = 0; i < s.length(); i++ )
-    {        
+    {
         Node* child = current->findChild(s[i]);
         if ( child != NULL )
         {
@@ -66,16 +66,16 @@ bool Trie::searchWord(string s)
     return false;
 }
 void Trie::printAllPossibleChildren(Node* node, string s){
-            
-            string aux = s + node->content();
-            if ( node->children().size()==0 ){
-                cout << aux << endl;
-                return;
-            }else{
-                for(int i = 0; i<node->children().size(); i++){
-                    printAllPossibleChildren(node->children().at(i), aux);
-                }
-            }
+
+        string aux = s + node->content();
+        if ( node->wordMarker() ){
+            cout << aux << endl;
+        }
+
+        for(int i = 0; i < node->children().size(); i++){
+            printAllPossibleChildren(node->children().at(i), aux);
+        }
+
 }
 
 void Trie::findRadOccurances(string rad){
@@ -83,20 +83,20 @@ void Trie::findRadOccurances(string rad){
 
     Node* current = root;
 
-        for ( int i = 0; i < rad.length(); i++ )
-        {
-            Node* tmp = current->findChild(rad[i]);
-            if ( tmp == NULL ){
-                cout << "No word has been found with that Rad" << endl;
-                return;
-            }
-            current = tmp;
+    for ( int i = 0; i < rad.length(); i++ )
+    {
+        Node* tmp = current->findChild(rad[i]);
+        if ( tmp == NULL ){
+            cout << "No word has been found with that Rad" << endl;
+            return;
         }
-    
+        current = tmp;
+    }
 
-        for(Node* no : current->children()){
-                printAllPossibleChildren(no, rad);
-                }
+
+    for(Node* no : current->children()){
+        printAllPossibleChildren(no, rad);
+    }
 
     return;
 

@@ -16,9 +16,10 @@ class EmotionDetector{
 
     private:
         HashTable *hashTable; // HashTable with WordEntries
+        HashTable *stopWords;
         vector< pair< string, int > > frases; // All senteces read from the file
         vector< WordEntry* > heap; // Heap used to get extremes occurences
-        Trie* trie;//TODO: implement Trie Tree
+        Trie* trie;
 
         int maxId; // Id of the last sentence
 
@@ -26,6 +27,11 @@ class EmotionDetector{
         *   Read dataBase of reviews and insert in the hashTable
         */
         void fileReader(string);
+
+        /*
+        *  Generate hashTable of stopWords from the file
+        */
+        void readStopWordsFile(string);
 
         /*
         *   Builds HeapTreeMAX by rating
@@ -137,6 +143,13 @@ class EmotionDetector{
         *  Adds file words to memory
         */
         void addFile(string fileName);
+
+        /*
+        *  Given a .txt with new Movie Reviews,
+        *  generates a new .txt with the rating of each review.
+        *  @param file File with new reviews
+        */
+        void calculateReviewsFromFile(string fileName);
 
         void printHashTable();
 

@@ -6,15 +6,43 @@
 
 using namespace std;
 
-
 EmotionDetector::EmotionDetector(string fileName)
 {
     trie = new Trie();
     maxId = 0;
+
     hashTable = new HashTable(1000);
     fileReader(fileName);
+
+    stopWords = new HashTable(100);
+    readStopWordsFile("stopWords.txt");
 }
 
+void EmotionDetector::readStopWordsFile(string fileName){
+
+    //open input file
+    ifstream myFile (fileName);
+    if (myFile.fail())
+    {
+        cout << "Could not open file " << fileName << endl;
+        exit(0);
+    }
+
+    int lineId = 0;
+
+    while( !myFile.eof() ){
+
+        string word;
+        myFile >> word;
+
+        if(word.size() > 0){
+            WordEntry wordEntry(word, -1, lineId++);
+            stopWords->put(wordEntry);
+        }
+    }
+
+
+}
 
 void EmotionDetector::fileReader(string fileName)
 {
@@ -25,7 +53,7 @@ void EmotionDetector::fileReader(string fileName)
     ifstream myfile (fileName);
     if (myfile.fail())
     {
-        cout << "could not open file" <<endl;
+        cout << "Could not open file " << fileName << endl;
         exit(0);
     }
 
@@ -37,7 +65,7 @@ void EmotionDetector::fileReader(string fileName)
         myfile.get();    // get blank space
         getline(myfile, line);
 
-        this->frases.push_back( pair< string, int >(line.substr(0, line.size()), score) );
+        this->frases.push_back( pair< string, int >(line, score) );
 
         int len = line.size();
         while(len > 0)    //identify all individual strings
@@ -54,10 +82,14 @@ void EmotionDetector::fileReader(string fileName)
                 sub = line.substr(0, line.size());
             }
 
+            // Add word to Trie
             trie->addWord(sub);
 
+            // Create word entry
             WordEntry heapInput(sub, score, lineId);
 
+            // Insert in the hashTable, updating score if already exists
+            // if is a new word, insert it in the heap
             if(hashTable->put(heapInput))
                 heap.push_back(hashTable->getWordEntry(sub));   //insert string with the score
         }
@@ -65,6 +97,7 @@ void EmotionDetector::fileReader(string fileName)
         lineId++;
     }
     maxId = lineId;
+    myfile.close();
 }
 
 
@@ -566,6 +599,62 @@ void EmotionDetector::addFile(string fileName){
             maxId++;
         }
 
+
+}
+
+void EmotionDetector::calculateReviewsFromFile(string fileName){
+
+    string line;
+    string wholeLine;
+    double score;
+    int count;
+
+    //open input file
+    ifstream myfile (fileName);
+    if (myfile.fail())
+    {
+        cout << "could not open file" <<endl;
+        exit(0);
+    }
+
+    ofstream out(fileName.substr(0, fileName.find(".txt")) + "Out" + ".txt");
+
+    while (! myfile.eof() )
+    {
+        score = 0;
+        count = 0;
+
+        getline(myfile, line);
+        wholeLine = line;
+
+        int len = line.size();
+
+        if(len > 0){
+            while(len > 0)    //identify all individual strings
+            {
+                string sub;
+                len = line.find(" ");
+                if (len > 0)
+                {
+                    sub = line.substr(0, len);
+                    line = line.substr(len + 1, line.size());
+                }
+                else
+                {
+                    sub = line.substr(0, line.size());
+                }
+                count++;
+                score += hashTable->getAverage(sub);
+
+
+            }
+            out << score/count << " " << wholeLine << endl;
+        }
+
+    }
+
+    myfile.close();
+    out.close();
 
 }
 

@@ -56,7 +56,9 @@ int main()
                 break;
 
             case 3:
-                //TODO: Calculate Review's score from a file
+                cout << "Please type name of the file:" << endl;
+                cin >> buff;
+                emotionDetector.calculateReviewsFromFile(buff);
                 break;
 
             case 4:
