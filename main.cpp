@@ -1,10 +1,3 @@
-/* author: (your name here)
-*  date: (today's date)
-*  description:  provide a brief description of your program
-*  proposed points (out of 10): a description of the number
-*  of points you believe your assignment is worth
-*/
-
 #include "EmotionDetector.h"
 #include <iostream>
 #include <fstream>
@@ -32,6 +25,7 @@ int main()
            options += "9 - Radical search of words\n";
            options += "10 - Add another file\n";
            options += "0 - QUIT \n";
+    string cursor = "> ";
 
     EmotionDetector emotionDetector(fileName);
     string buff;
@@ -39,51 +33,51 @@ int main()
 
     do{
 
-        cout << options << endl;
-
+        cout << options;
+        cout << cursor;
         cin >> op;
 
         switch(op){
 
             case 1:
-                cout << "Please type the word:" << endl;
+                cout << "Please type the word:" << endl << cursor;
                 cin >> buff;
                 cout << emotionDetector.avgRatingWord(buff) << endl;
                 break;
 
             case 2:
-                cout << "Please type the new Review:" << endl;
+                cout << "Please type the new Review:" << endl << cursor;
                 cin.ignore(); // Ignore \n from enter
                 getline(cin, buff);
                 emotionDetector.calculateReviewEmotion(buff);
                 break;
 
             case 3:
-                cout << "Please type name of the file:" << endl;
+                cout << "Please type name of the file:" << endl << cursor;
                 cin >> buff;
                 emotionDetector.calculateReviewsFromFile(buff);
                 break;
 
             case 4:
-                cout << "Please type the K:" << endl;
+                cout << "Please type the K:" << endl << cursor;
                 cin >> numOfExtremes;
                 emotionDetector.printMostPositive(numOfExtremes);
                 break;
 
             case 5:
-                cout << "Please type the K:" << endl;
+                cout << "Please type the K:" << endl << cursor;
                 cin >> numOfExtremes;
                 emotionDetector.printMostNegative(numOfExtremes);
                 break;
 
             case 6:
-                cout << "Please type the K:" << endl;
+                cout << "Please type the K:" << endl << cursor;
                 cin >> numOfExtremes;
                 emotionDetector.printMostAppearances(numOfExtremes);
                 break;
 
             case 7:
-                cout << "Please type the K:" << endl;
+                cout << "Please type the K:" << endl << cursor;
                 cin >> numOfExtremes;
                 emotionDetector.printLessAppearances(numOfExtremes);
                 break;
@@ -91,7 +85,7 @@ int main()
             case 8:
                 cout << "Please type the word you want to generate cvs with the reviews it appears in:" << endl;
                 cin >> buff;
-                cout << "Please type the mininum and maximun rating of the reviews" << endl;
+                cout << "Please type the mininum and maximun rating of the reviews" << endl << cursor;
                 double min, max;
                 cin >> min;
                 cin >> max;
@@ -99,23 +93,24 @@ int main()
                 break;
 
             case 9:
-                cout << "Please type the radical you want to search for:" << endl;
+                cout << "Please type the radical you want to search for:" << endl << cursor;
                 cin >> buff;
                 emotionDetector.radicalsSearch(buff);
                 break;
 
             case 10:
-                cout << "Please type the name of the file you want to read:" << endl;
+                cout << "Please type the name of the file you want to read:" << endl << cursor;
                 cin >> buff;
                 emotionDetector.addFile(buff);
                 break;
 
             default:
                 if(op != 0)
-                    cout << "Command not recognized!!" << endl;
+                    cout << "Command not recognized!" << endl;
                 break;
 
         }
+        cout << endl;
 
     }while(op != 0);
 

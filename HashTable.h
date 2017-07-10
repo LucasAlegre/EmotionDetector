@@ -12,8 +12,9 @@ using namespace std;
 class HashTable {
 
     private:
-        vector< list<WordEntry> > *hashTable;
-        int size;
+        vector< list<WordEntry> > hashTable;
+        size_t size;
+        unsigned long occupancy;
 
         /*
         *   Computes hash of a word

@@ -6,15 +6,10 @@
 
 using namespace std;
 
-EmotionDetector::EmotionDetector(string fileName)
+EmotionDetector::EmotionDetector(string fileName) : hashTable(2000), stopWords(100), maxId(0)
 {
-    trie = new Trie();
-    maxId = 0;
-
-    hashTable = new HashTable(1000);
     fileReader(fileName);
 
-    stopWords = new HashTable(100);
     readStopWordsFile("stopWords.txt");
 }
 
@@ -37,7 +32,7 @@ void EmotionDetector::readStopWordsFile(string fileName){
 
         if(word.size() > 0){
             WordEntry wordEntry(word, -1, lineId++);
-            stopWords->put(wordEntry);
+            stopWords.put(wordEntry);
         }
     }
 
@@ -83,15 +78,15 @@ void EmotionDetector::fileReader(string fileName)
             }
 
             // Add word to Trie
-            trie->addWord(sub);
+            trie.addWord(sub);
 
             // Create word entry
             WordEntry heapInput(sub, score, lineId);
 
             // Insert in the hashTable, updating score if already exists
             // if is a new word, insert it in the heap
-            if(hashTable->put(heapInput))
-                heap.push_back(hashTable->getWordEntry(sub));   //insert string with the score
+            if(hashTable.put(heapInput))
+                heap.push_back(hashTable.getWordEntry(sub));   //insert string with the score
         }
 
         lineId++;
@@ -102,25 +97,25 @@ void EmotionDetector::fileReader(string fileName)
 
 
 void EmotionDetector::buildHeapMAXbyRating(){
-    for(int i=(heap.size())/2 - 1; i >= 0; i--){
+    for(int i = (heap.size()/2) - 1; i >= 0; i--){
         maxHeapifyByRating(i);
     }
 }
 
 void EmotionDetector::buildHeapMAXbyAppearances(){
-    for(int i = (heap.size())/2 - 1; i >= 0; i--){
+    for(int i = (heap.size()/2) - 1; i >= 0; i--){
         maxHeapifyByAppearances(i);
     }
 }
 
 void EmotionDetector::buildHeapMINbyRating(){
-    for(int i=(heap.size())/2 - 1; i >= 0; i--){
+    for(int i = (heap.size()/2) - 1; i >= 0; i--){
         minHeapifyByRating(i);
     }
 }
 
 void EmotionDetector::buildHeapMINbyAppearances(){
-    for(int i=(heap.size())/2 - 1; i >= 0; i--){
+    for(int i = (heap.size()/2) - 1; i >= 0; i--){
         minHeapifyByAppearances(i);
     }
 }
@@ -206,7 +201,7 @@ void EmotionDetector::calculateReviewEmotion(string message){
         double sum = 0;
         int count = 0;
 
-        int len = message.size();
+        unsigned len = message.size();
         //get each individual word from the input
         while(len != std::string::npos)
         {
@@ -222,25 +217,25 @@ void EmotionDetector::calculateReviewEmotion(string message){
                 sub = message;
             }
             //calculate the score of each word
-            sum += hashTable->getAverage(sub);
+            sum += hashTable.getAverage(sub);
             count++;
         }
 
         if (message.size() > 0)
         {
-            cout << "The review has an average value of " << (double)sum/count << endl << endl;
+            cout << "The review has an average value of " << (double)sum/count << endl;
         }
     }
 
 }
 
 double EmotionDetector::avgRatingWord(const string word){
-    return this->hashTable->getAverage(word);
+    return this->hashTable.getAverage(word);
 }
 
 void EmotionDetector::printAppearances(const string word){
 
-    WordEntry *w = hashTable->getWordEntry(word);
+    WordEntry *w = hashTable.getWordEntry(word);
     if(w != nullptr){
         cout << "Reviews with the word: " << word << endl << endl;
         for(int i : w->getReviewIds()){
@@ -254,7 +249,7 @@ void EmotionDetector::printAppearances(const string word){
 
 void EmotionDetector::generateCVS(const string word, double min, double max){
 
-    WordEntry *w = hashTable->getWordEntry(word);
+    WordEntry *w = hashTable.getWordEntry(word);
     if(w != nullptr){
         ofstream cvs(word + ".cvs");
         for(int i : w->getReviewIds()){
@@ -545,7 +540,7 @@ void EmotionDetector::printLessAppearances(int k){
 
 void EmotionDetector::radicalsSearch(string rad){
 
-    trie->findRadOccurances(rad);
+    this->trie.findRadOccurances(rad);
 
 }
 
@@ -584,12 +579,12 @@ void EmotionDetector::addFile(string fileName){
                     sub = line.substr(0, line.size());
                 }
 
-                trie->addWord(sub);
+                trie.addWord(sub);
 
                 WordEntry heapInput(sub, score, maxId);
 
-                if(hashTable->put(heapInput))
-                    heap.push_back(hashTable->getWordEntry(sub));   //insert string with the score
+                if(hashTable.put(heapInput))
+                    heap.push_back(hashTable.getWordEntry(sub));   //insert string with the score
             }
 
             maxId++;
@@ -640,7 +635,7 @@ void EmotionDetector::calculateReviewsFromFile(string fileName){
                     sub = line.substr(0, line.size());
                 }
                 count++;
-                score += hashTable->getAverage(sub);
+                score += hashTable.getAverage(sub);
 
 
             }
@@ -655,5 +650,5 @@ void EmotionDetector::calculateReviewsFromFile(string fileName){
 }
 
 void EmotionDetector::printHashTable(){
-    hashTable->print();
+    hashTable.print();
 }

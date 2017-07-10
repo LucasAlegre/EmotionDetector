@@ -10,16 +10,15 @@ using namespace std;
 
 /*
 *   Core Class
-*
 */
 class EmotionDetector{
 
     private:
-        HashTable *hashTable; // HashTable with WordEntries
-        HashTable *stopWords;
-        vector< pair< string, int > > frases; // All senteces read from the file
-        vector< WordEntry* > heap; // Heap used to get extremes occurences
-        Trie* trie;
+        HashTable hashTable; // HashTable with WordEntries
+        HashTable stopWords;
+        vector< pair< string, int > > frases; // All sentences read from the file
+        vector< WordEntry* > heap; // Heap used to get extremes occurrences
+        Trie trie; // Trie tree to find words by radicals
 
         int maxId; // Id of the last sentence
 

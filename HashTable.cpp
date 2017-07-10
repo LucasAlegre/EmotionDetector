@@ -2,17 +2,15 @@
 #include "WordEntry.h"
 
 
-HashTable::HashTable(int s)
+HashTable::HashTable(int s) : hashTable(s), size(s), occupancy(0)
 {
-	size = s;
-    hashTable = new vector< list<WordEntry> >(size);
 }
 
 int HashTable::computeHash(string s) {
 
 	unsigned long hash = 0;
 	for(unsigned i = 0; i < s.size(); i++){
-		hash += s[i];
+		hash += s[i]*(i+1);
 	}
 	return hash % size;
 }
@@ -20,14 +18,15 @@ int HashTable::computeHash(string s) {
 bool HashTable::put(WordEntry entry) {
 	int hash = computeHash(entry.getWord());
 
-    for( list<WordEntry>::iterator it = hashTable->at(hash).begin(); it != hashTable->at(hash).end(); it++ ){
+    for( list<WordEntry>::iterator it = hashTable.at(hash).begin(); it != hashTable.at(hash).end(); it++ ){
 		if((*it).getWord() == entry.getWord()){
             (*it).addNewAppearance(entry.getTotalScore(), entry.getReviewIds().front());
 			return false;
 		}
 	}
 
-	hashTable->at(hash).push_back(entry);
+	hashTable.at(hash).push_back(entry);
+	occupancy++;
 	return true;
 
 }
@@ -35,7 +34,7 @@ bool HashTable::put(WordEntry entry) {
 double HashTable::getAverage(const string s) {
     int hash = computeHash(s);
 
-    for( WordEntry w : hashTable->at(hash) ){
+    for( WordEntry w : hashTable.at(hash) ){
 			if(w.getWord() == s){
 			return w.getAverage();
 		}
@@ -47,7 +46,7 @@ double HashTable::getAverage(const string s) {
 WordEntry* HashTable::getWordEntry(const string s) {
     int hash = computeHash(s);
 
-    for( list<WordEntry>::iterator it = hashTable->at(hash).begin(); it != hashTable->at(hash).end(); it++ ){
+    for( list<WordEntry>::iterator it = hashTable.at(hash).begin(); it != hashTable.at(hash).end(); it++ ){
 		if((*it).getWord() == s){
 			return &(*it);
 		}
@@ -58,8 +57,8 @@ WordEntry* HashTable::getWordEntry(const string s) {
 bool HashTable::contains(const string s) {
 
      int hash = computeHash(s);
-	 if( !hashTable->at(hash).empty() ){
-        for( WordEntry w : hashTable->at(hash) ){
+	 if( !hashTable.at(hash).empty() ){
+        for( WordEntry w : hashTable.at(hash) ){
             if(w.getWord() == s){
                 return true;
             }
@@ -70,9 +69,9 @@ bool HashTable::contains(const string s) {
 
 void HashTable::print(){
     int s = 0;
-    for(int i = 0; i < hashTable->size(); i++){
-        cout << hashTable->at(i).size() << endl;
-        s += hashTable->at(i).size();
+    for(int i = 0; i < hashTable.size(); i++){
+        cout << hashTable.at(i).size() << endl;
+        s += hashTable.at(i).size();
     }
-    cout << s;
+    cout << "Occupancy: " << occupancy << endl;
 }
