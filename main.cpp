@@ -29,7 +29,6 @@ int main()
     string cursor = "> ";
 
     EmotionDetector emotionDetector(fileName, 1);
-    emotionDetector.printHashTable();
 
     string buff;
     int numOfExtremes;
