@@ -6,12 +6,17 @@ HashTable::HashTable(int s) : hashTable(s), size(s), occupancy(0)
 {
 }
 
+// x[k-1] + 7(x[k-2] + 7(x[k-3] + ... + 7(x[1] + 7x[0]) ... )
 int HashTable::computeHash(string s) {
 
+    const int alfa = 7;
 	unsigned long hash = 0;
-	for(unsigned i = 0; i < s.size(); i++){
-		hash += s[i]*(i+1);
+	unsigned i;
+	for(i = 0; i < s.size() - 1; i++){
+		hash += s[i];
+		hash *= alfa;
 	}
+	hash += s[i];
 	return hash % size;
 }
 
@@ -69,7 +74,7 @@ bool HashTable::contains(const string s) {
 
 void HashTable::print(){
     int s = 0;
-    for(int i = 0; i < hashTable.size(); i++){
+    for(unsigned i = 0; i < hashTable.size(); i++){
         cout << hashTable.at(i).size() << endl;
         s += hashTable.at(i).size();
     }

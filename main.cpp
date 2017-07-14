@@ -9,8 +9,8 @@ int main()
 {
 
     string fileName = "movieReviews.txt";
-    //cout << "Please type the name of the file you want to process:" << endl;
-   // cin >> fileName;
+    cout << "Please type the name of the file you want to process:" << endl;
+    cin >> fileName;
     int op;
 
     string options = "Type one of the options ahead:\n";
@@ -27,7 +27,9 @@ int main()
            options += "0 - QUIT \n";
     string cursor = "> ";
 
-    EmotionDetector emotionDetector(fileName);
+    EmotionDetector emotionDetector(fileName, 1);
+    emotionDetector.calculateReviewsFromFileKaggle("test.tsv");
+
     string buff;
     int numOfExtremes;
 

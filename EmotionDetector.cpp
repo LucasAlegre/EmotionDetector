@@ -3,12 +3,18 @@
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
+#include <algorithm>
+#include <math.h>
+#include <sstream>
 
 using namespace std;
 
-EmotionDetector::EmotionDetector(string fileName) : hashTable(2000), stopWords(100), maxId(0)
+EmotionDetector::EmotionDetector(string fileName, int fileType) : hashTable(42589), stopWords(100), maxId(0) // 4001 is a prime number!
 {
-    fileReader(fileName);
+    if(fileType == 0)
+        fileReader(fileName);
+    else if(fileType == 1)
+        fileReaderKaggle(fileName);
 
     readStopWordsFile("stopWords.txt");
 }
@@ -61,6 +67,75 @@ void EmotionDetector::fileReader(string fileName)
         getline(myfile, line);
 
         this->frases.push_back( pair< string, int >(line, score) );
+
+        transform(line.begin(), line.end(), line.begin(), ::tolower);
+
+        int len = line.size();
+        while(len > 0)    //identify all individual strings
+        {
+            string sub;
+            len = line.find(" ");
+            if (len > 0)
+            {
+                sub = line.substr(0, len);
+                line = line.substr(len + 1,line.size());
+            }
+            else
+            {
+                sub = line.substr(0, line.size());
+            }
+
+            // Add word to Trie
+            trie.addWord(sub);
+
+            // Create word entry
+            WordEntry heapInput(sub, score, lineId);
+
+            // Insert in the hashTable, updating score if already exists
+            // if is a new word, insert it in the heap
+            if(hashTable.put(heapInput))
+                heap.push_back(hashTable.getWordEntry(sub));   //insert string with the score
+        }
+
+        lineId++;
+    }
+    maxId = lineId;
+    myfile.close();
+}
+
+void EmotionDetector::fileReaderKaggle(string fileName){
+
+    string line;
+    string fullLine;
+    int score;
+    int lixo;
+
+    //open input file
+    ifstream myfile (fileName);
+    if (myfile.fail())
+    {
+        cout << "Could not open file " << fileName << endl;
+        exit(0);
+    }
+
+    int lineId = 0;
+
+    getline(myfile, line); // ignores header
+
+    while (! myfile.eof() )
+    {
+        myfile >> lixo;  // phraseId
+        myfile.get();    // get blank space
+        myfile >> lixo;  // sentenceId
+        myfile.get();    // get blank space
+        getline(myfile, fullLine);
+
+        line = fullLine.substr(0, fullLine.size() - 1);
+        score = fullLine.at(fullLine.size() - 1) - '0';
+
+        this->frases.push_back( pair< string, int >(line, score) );
+
+        transform(line.begin(), line.end(), line.begin(), ::tolower);
 
         int len = line.size();
         while(len > 0)    //identify all individual strings
@@ -201,6 +276,9 @@ void EmotionDetector::calculateReviewEmotion(string message){
         double sum = 0;
         int count = 0;
 
+        // convert to lowercase
+        transform(message.begin(), message.end(), message.begin(), ::tolower);
+
         unsigned len = message.size();
         //get each individual word from the input
         while(len != std::string::npos)
@@ -217,13 +295,19 @@ void EmotionDetector::calculateReviewEmotion(string message){
                 sub = message;
             }
             //calculate the score of each word
-            sum += hashTable.getAverage(sub);
-            count++;
+            if( !stopWords.contains(sub) ){
+                sum += hashTable.getAverage(sub);
+                count++;
+            }
         }
 
         if (message.size() > 0)
         {
-            cout << "The review has an average value of " << (double)sum/count << endl;
+            cout << "The review has an average value of ";
+            if(count != 0)
+                cout << (double)sum/count << endl;
+            else
+                cout << 2 << endl;
         }
     }
 
@@ -564,6 +648,8 @@ void EmotionDetector::addFile(string fileName){
 
             this->frases.push_back( pair< string, int >(line.substr(0, line.size()), score) );
 
+            transform(line.begin(), line.end(), line.begin(), ::tolower);
+
             int len = line.size();
             while(len > 0)    //identify all individual strings
             {
@@ -618,6 +704,8 @@ void EmotionDetector::calculateReviewsFromFile(string fileName){
         getline(myfile, line);
         wholeLine = line;
 
+        transform(line.begin(), line.end(), line.begin(), ::tolower);
+
         int len = line.size();
 
         if(len > 0){
@@ -634,12 +722,89 @@ void EmotionDetector::calculateReviewsFromFile(string fileName){
                 {
                     sub = line.substr(0, line.size());
                 }
-                count++;
-                score += hashTable.getAverage(sub);
 
+                if( !stopWords.contains(sub) ){
+                    count++;
+                    score += hashTable.getAverage(sub);
+                }
 
             }
-            out << score/count << " " << wholeLine << endl;
+            if(count != 0)
+                out << score/count << " " << wholeLine << endl;
+            else
+                out << 2 << " " << wholeLine << endl;
+        }
+
+    }
+
+    myfile.close();
+    out.close();
+
+}
+
+void EmotionDetector::calculateReviewsFromFileKaggle(string fileName){
+
+    string line;
+    string fullLine;
+    double score;
+    int phraseId;
+    int lixo;
+    int count;
+
+    //open input file
+    ifstream myfile (fileName);
+    if (myfile.fail())
+    {
+        cout << "could not open file" <<endl;
+        exit(0);
+    }
+
+    ofstream out(fileName.substr(0, fileName.find(".tsv")) + "Out" + ".csv");
+    out << "PhraseId,Sentiment" << endl;
+
+    getline(myfile, fullLine); // ignores header
+
+    while (! myfile.eof() )
+    {
+        score = 0;
+        count = 0;
+
+        myfile >> phraseId;
+        myfile.get(); // blank space
+        myfile >> lixo;
+        myfile.get();
+
+        getline(myfile, line);
+        fullLine = line;
+
+        transform(line.begin(), line.end(), line.begin(), ::tolower);
+
+        int len = line.size();
+
+        if(len > 0){
+            while(len > 0)    //identify all individual strings
+            {
+                string sub;
+                len = line.find(" ");
+                if (len > 0)
+                {
+                    sub = line.substr(0, len);
+                    line = line.substr(len + 1, line.size());
+                }
+                else
+                {
+                    sub = line.substr(0, line.size());
+                }
+                if( !stopWords.contains(sub) ){
+                    count++;
+                    score += hashTable.getAverage(sub);
+                }
+
+            }
+            if(count != 0)
+                out << phraseId << "," << (int) round(score/count) << endl;
+            else
+                out << phraseId << "," << 2 << endl;
         }
 
     }

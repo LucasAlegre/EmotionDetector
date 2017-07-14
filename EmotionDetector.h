@@ -24,8 +24,20 @@ class EmotionDetector{
 
         /*
         *   Read dataBase of reviews and insert in the hashTable
+        *   Format:
+        *   <sentiment> <sentence>
+        *   @param txt file
         */
         void fileReader(string);
+
+        /*
+        *   Read tsv Kaggle's file
+        *   Format:
+        *   PhraseId	SentenceId	Phrase	Sentiment
+        *   <phraseid>	<senteceId>	 <phrase>	<sentiment>
+        *   @param tsv file
+        */
+        void fileReaderKaggle(string);
 
         /*
         *  Generate hashTable of stopWords from the file
@@ -82,8 +94,9 @@ class EmotionDetector{
         /*
         *   Constructor
         *   @param string The file with the reviews
+        *   @param 0 - txt 1 - tsv
         */
-        EmotionDetector(string);
+        EmotionDetector(string, int);
 
         /*
         *   Calculate emotion score for new reviews
@@ -149,6 +162,13 @@ class EmotionDetector{
         *  @param file File with new reviews
         */
         void calculateReviewsFromFile(string fileName);
+
+        /*
+        *  Given a .tsv with new Movie Reviews,
+        *  generates a new .csv with the rating of each review.
+        *  @param file File with new reviews
+        */
+        void calculateReviewsFromFileKaggle(string fileName);
 
         void printHashTable();
 

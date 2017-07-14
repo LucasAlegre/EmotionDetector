@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1499721440 source:c:\users\lucas alegre\desktop\emotiondetector\hashtable.cpp
+1499738311 source:c:\users\lucas alegre\desktop\emotiondetector\hashtable.cpp
 	"HashTable.h"
 	"WordEntry.h"
 
@@ -19,7 +19,7 @@
 1499124214 source:c:\users\lucas alegre\desktop\emotiondetector\wordentry.cpp
 	"WordEntry.h"
 
-1499721473 source:c:\users\lucas alegre\desktop\emotiondetector\main.cpp
+1500001357 source:c:\users\lucas alegre\desktop\emotiondetector\main.cpp
 	"EmotionDetector.h"
 	<iostream>
 	<fstream>
@@ -62,17 +62,19 @@
 	<fstream>
 	<cstdlib>
 
-1499721440 c:\users\lucas alegre\desktop\emotiondetector\emotiondetector.h
+1500000785 c:\users\lucas alegre\desktop\emotiondetector\emotiondetector.h
 	<vector>
 	"HashTable.h"
 	"WordEntry.h"
 	"Trie.h"
 
-1499721115 source:c:\users\lucas alegre\desktop\emotiondetector\emotiondetector.cpp
+1500000094 source:c:\users\lucas alegre\desktop\emotiondetector\emotiondetector.cpp
 	"EmotionDetector.h"
 	<iostream>
 	<fstream>
 	<cstdlib>
+	<algorithm>
+	<sstream>
 
 1499629485 c:\users\lucas alegre\desktop\emotiondetector\trie.h
 	<string>
