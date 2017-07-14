@@ -16,10 +16,10 @@
 	<list>
 	<iostream>
 
-1499124214 source:c:\users\lucas alegre\desktop\emotiondetector\wordentry.cpp
+1500044843 source:c:\users\lucas alegre\desktop\emotiondetector\wordentry.cpp
 	"WordEntry.h"
 
-1500001357 source:c:\users\lucas alegre\desktop\emotiondetector\main.cpp
+1500051926 source:c:\users\lucas alegre\desktop\emotiondetector\main.cpp
 	"EmotionDetector.h"
 	<iostream>
 	<fstream>
@@ -68,12 +68,13 @@
 	"WordEntry.h"
 	"Trie.h"
 
-1500000094 source:c:\users\lucas alegre\desktop\emotiondetector\emotiondetector.cpp
+1500047342 source:c:\users\lucas alegre\desktop\emotiondetector\emotiondetector.cpp
 	"EmotionDetector.h"
 	<iostream>
 	<fstream>
 	<cstdlib>
 	<algorithm>
+	<math.h>
 	<sstream>
 
 1499629485 c:\users\lucas alegre\desktop\emotiondetector\trie.h
@@ -90,7 +91,7 @@
 	<iostream>
 	"Node.h"
 
-1499630469 source:c:\users\lucas alegre\desktop\emotiondetector\trie.cpp
+1500051672 source:c:\users\lucas alegre\desktop\emotiondetector\trie.cpp
 	"Node.h"
 	"Trie.h"
 

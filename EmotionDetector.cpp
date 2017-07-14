@@ -9,7 +9,7 @@
 
 using namespace std;
 
-EmotionDetector::EmotionDetector(string fileName, int fileType) : hashTable(42589), stopWords(100), maxId(0) // 4001 is a prime number!
+EmotionDetector::EmotionDetector(string fileName, int fileType) : hashTable(7039), stopWords(100), maxId(0)
 {
     if(fileType == 0)
         fileReader(fileName);
@@ -41,7 +41,7 @@ void EmotionDetector::readStopWordsFile(string fileName){
             stopWords.put(wordEntry);
         }
     }
-
+    myFile.close();
 
 }
 
@@ -130,8 +130,8 @@ void EmotionDetector::fileReaderKaggle(string fileName){
         myfile.get();    // get blank space
         getline(myfile, fullLine);
 
-        line = fullLine.substr(0, fullLine.size() - 1);
-        score = fullLine.at(fullLine.size() - 1) - '0';
+        score = fullLine.at(fullLine.size() - 1) - '0';  // get score at the last position of the line
+        line = fullLine.substr(0, fullLine.size() - 2);  // remove score and tab/space before it
 
         this->frases.push_back( pair< string, int >(line, score) );
 
@@ -141,11 +141,13 @@ void EmotionDetector::fileReaderKaggle(string fileName){
         while(len > 0)    //identify all individual strings
         {
             string sub;
+
             len = line.find(" ");
+
             if (len > 0)
             {
                 sub = line.substr(0, len);
-                line = line.substr(len + 1,line.size());
+                line = line.substr(len + 1, line.size());
             }
             else
             {

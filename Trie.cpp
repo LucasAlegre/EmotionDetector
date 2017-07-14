@@ -93,6 +93,8 @@ void Trie::findRadOccurances(string rad){
         current = tmp;
     }
 
+    if(current->wordMarker())
+        cout << rad << endl;
 
     for(Node* no : current->children()){
         printAllPossibleChildren(no, rad);

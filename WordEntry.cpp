@@ -9,7 +9,10 @@ void WordEntry::addNewAppearance(int score, int reviewId)
 {
 	this->totalScore += score;
 	this->numAppearances++;
-	this->reviewsId.push_back(reviewId);
+
+	// if the word already appears in this sentence
+	if( this->reviewsId.back() != reviewId )
+        this->reviewsId.push_back(reviewId);
 }
 
 string WordEntry::getWord()
