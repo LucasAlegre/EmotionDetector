@@ -24,11 +24,11 @@ int main()
            options += "8 - Generate cvs file with comments of a word\n";
            options += "9 - Radical search of words\n";
            options += "10 - Add another file\n";
+           options += "11 - Generate csv file from Kaggle format file\n";
            options += "0 - QUIT \n";
     string cursor = "> ";
 
     EmotionDetector emotionDetector(fileName, 1);
-    emotionDetector.calculateReviewsFromFileKaggle("test.tsv");
 
     string buff;
     int numOfExtremes;
@@ -104,6 +104,12 @@ int main()
                 cout << "Please type the name of the file you want to read:" << endl << cursor;
                 cin >> buff;
                 emotionDetector.addFile(buff);
+                break;
+
+            case 11:
+                cout << "Please type the name of the file you want to read:" << endl << cursor;
+                cin >> buff;
+                emotionDetector.calculateReviewsFromFileKaggle(buff);
                 break;
 
             default:
