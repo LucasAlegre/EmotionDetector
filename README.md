@@ -1,6 +1,8 @@
 # Emotion Detector
 
 Final Project for the "Classificação e Pesquisa de Dados" course at UFRGS.
+Based on : https://www.kaggle.com/c/sentiment-analysis-on-movie-reviews
+
 
 ### Compiling
 
@@ -14,7 +16,7 @@ make
 
 To run:
 ```
-cd /bin
+cd bin
 ./emotionDetector
 ```
 
