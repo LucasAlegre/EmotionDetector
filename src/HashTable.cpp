@@ -40,7 +40,7 @@ double HashTable::getAverage(const string s) {
     int hash = computeHash(s);
 
     for( WordEntry w : hashTable.at(hash) ){
-			if(w.getWord() == s){
+		if(w.getWord() == s){
 			return w.getAverage();
 		}
 	}

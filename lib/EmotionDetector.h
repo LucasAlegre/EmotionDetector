@@ -15,7 +15,7 @@ class EmotionDetector{
 
     private:
         HashTable hashTable; // HashTable with WordEntries
-        HashTable stopWords;
+        HashTable stopWords; // HashTable with prepositions, articles, etc
         vector< pair< string, int > > frases; // All sentences read from the file
         vector< WordEntry* > heap; // Heap used to get extremes occurrences
         Trie trie; // Trie tree to find words by radicals
@@ -123,7 +123,7 @@ class EmotionDetector{
         *   @param min Lowest rating of the interval
         *   @param max Biggest rating of the interval
         */
-        void generateCVS(const string word, double min, double max);
+        void generateCSV(const string word, double min, double max);
 
         /*
         *  Prints the K most positive words

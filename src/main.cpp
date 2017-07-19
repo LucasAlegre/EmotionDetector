@@ -7,9 +7,11 @@ using namespace std;
 
 int main()
 {
+    string cursor = "> ";
 
     string fileName = "movieReviews.txt";
     cout << "Please type the name of the file you want to process:" << endl;
+    cout << cursor;
     cin >> fileName;
     int op;
 
@@ -26,7 +28,6 @@ int main()
            options += "10 - Add another file\n";
            options += "11 - Generate csv file from Kaggle format file\n";
            options += "0 - QUIT \n";
-    string cursor = "> ";
 
     EmotionDetector emotionDetector(fileName, 1);
 
@@ -51,6 +52,7 @@ int main()
                 cout << "Please type the new Review:" << endl << cursor;
                 cin.ignore(); // Ignore \n from enter
                 getline(cin, buff);
+          
                 emotionDetector.calculateReviewEmotion(buff);
                 break;
 
@@ -91,7 +93,7 @@ int main()
                 double min, max;
                 cin >> min;
                 cin >> max;
-                emotionDetector.generateCVS(buff, min, max);
+                emotionDetector.generateCSV(buff, min, max);
                 break;
 
             case 9:

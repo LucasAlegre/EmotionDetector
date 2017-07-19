@@ -1,5 +1,9 @@
 #include "Node.h"
 #include "Trie.h"
+#include <cstdlib>
+#include <algorithm>
+#include <math.h>
+#include <sstream>
 
 using namespace std;
 
@@ -47,6 +51,8 @@ bool Trie::searchWord(string s)
 {
     Node* current = root;
 
+    transform(s.begin(), s.end(), s.begin(), ::tolower);
+
     while ( current != NULL )
     {
         for ( int i = 0; i < s.length(); i++ )
@@ -80,8 +86,9 @@ void Trie::printAllPossibleChildren(Node* node, string s){
 
 void Trie::findRadOccurances(string rad){
 
-
     Node* current = root;
+
+    transform(rad.begin(), rad.end(), rad.begin(), ::tolower);
 
     for ( int i = 0; i < rad.length(); i++ )
     {

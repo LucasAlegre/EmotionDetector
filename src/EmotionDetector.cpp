@@ -270,9 +270,9 @@ void EmotionDetector::minHeapifyByAppearances(int i){
 }
 
 
-void EmotionDetector::calculateReviewEmotion(string message){
-
-    if(message.length() > 0)
+void EmotionDetector:: calculateReviewEmotion(string message){
+    
+    if(message.size() > 0)
     {
         //used for calculating the average
         double sum = 0;
@@ -281,31 +281,33 @@ void EmotionDetector::calculateReviewEmotion(string message){
         // convert to lowercase
         transform(message.begin(), message.end(), message.begin(), ::tolower);
 
-        unsigned len = message.size();
+        int len = message.size();
         //get each individual word from the input
-        while(len != std::string::npos)
-        {
-            string sub;
-            len = message.find(" ");
-            if (len != string::npos)
+        if(len > 0){
+            while(len > 0)
             {
-                sub = message.substr(0, len);
-                message = message.substr(len + 1, message.size());
-            }
-            else
-            {
-                sub = message;
-            }
-            //calculate the score of each word
-            if( !stopWords.contains(sub) ){
-                sum += hashTable.getAverage(sub);
-                count++;
+                string sub;
+                len = message.find(" ");
+                if (len > 0)
+                {
+                    sub = message.substr(0, len);
+                    message = message.substr(len + 1, message.size());
+                }
+                else
+                {
+                    sub = message.substr(0, message.size());;
+                }
+                //calculate the score of each word
+                if( !stopWords.contains(sub) ){
+                    sum += hashTable.getAverage(sub);
+                    count++;
+                }
             }
         }
 
-        if (message.size() > 0)
-        {
-            cout << "The review has an average value of ";
+       if (message.size() > 0)
+       {
+            cout << "The review has an average value of ";  
             if(count != 0)
                 cout << (double)sum/count << endl;
             else
@@ -333,11 +335,11 @@ void EmotionDetector::printAppearances(const string word){
     }
 }
 
-void EmotionDetector::generateCVS(const string word, double min, double max){
+void EmotionDetector::generateCSV(const string word, double min, double max){
 
     WordEntry *w = hashTable.getWordEntry(word);
     if(w != nullptr){
-        ofstream cvs(word + ".cvs");
+        ofstream cvs(word + ".csv");
         for(int i : w->getReviewIds()){
             if(frases[i].second >= min && frases[i].second <= max)
                cvs << frases[i].second << " " << frases[i].first << endl;
@@ -660,7 +662,7 @@ void EmotionDetector::addFile(string fileName){
                 if (len > 0)
                 {
                     sub = line.substr(0, len);
-                    line = line.substr(len + 1,line.size());
+                    line = line.substr(len + 1, line.size());
                 }
                 else
                 {
@@ -766,8 +768,9 @@ void EmotionDetector::calculateReviewsFromFileKaggle(string fileName){
 
     getline(myfile, fullLine); // ignores header
 
-    while (! myfile.eof() )
+    do
     {
+
         score = 0;
         count = 0;
 
@@ -776,40 +779,44 @@ void EmotionDetector::calculateReviewsFromFileKaggle(string fileName){
         myfile >> lixo;
         myfile.get();
 
-        getline(myfile, line);
-        fullLine = line;
+        if( getline(myfile, line) )
+	    {
+            fullLine = line;
 
-        transform(line.begin(), line.end(), line.begin(), ::tolower);
+            // transform string to
+            transform(line.begin(), line.end(), line.begin(), ::tolower);
 
-        int len = line.size();
+            int len = line.size();
 
-        if(len > 0){
-            while(len > 0)    //identify all individual strings
-            {
-                string sub;
-                len = line.find(" ");
-                if (len > 0)
+            if(len > 0){
+                while(len > 0)    //identify all individual strings
                 {
-                    sub = line.substr(0, len);
-                    line = line.substr(len + 1, line.size());
+                    string sub;
+                    len = line.find(" ");
+                    if (len > 0)
+                    {
+                        sub = line.substr(0, len);
+                        line = line.substr(len + 1, line.size());
+                    }
+                    else
+                    {
+                        sub = line.substr(0, line.size());
+                    }
+                    // if it's not a stopWord
+                   if( !stopWords.contains(sub) ){
+                        count++;
+                        score += hashTable.getAverage(sub);
+                    }
+
                 }
+                if(count != 0)
+                    out << phraseId << "," << (int) round(score/count) << endl;
                 else
-                {
-                    sub = line.substr(0, line.size());
-                }
-                if( !stopWords.contains(sub) ){
-                    count++;
-                    score += hashTable.getAverage(sub);
-                }
-
-            }
-            if(count != 0)
-                out << phraseId << "," << (int) round(score/count) << endl;
-            else
-                out << phraseId << "," << 2 << endl;
+                    out << phraseId << "," << 2 << endl;
+	        }  
         }
 
-    }
+    }while( !myfile.eof() );
 
     myfile.close();
     out.close();
